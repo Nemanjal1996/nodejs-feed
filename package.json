@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 5000",
     "start": "nodemon app.js"
   },
   "author": "",
@@ -12,12 +12,17 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "express": "^4.16.4",
-    "express-validator": "^5.3.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.4.20",
-    "multer": "^1.4.1",
-    "nodemon": "^1.18.10",
+    "express": "^4.16.3",
+    "express-validator": "^5.3.0",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.3.2",
+    "multer": "^1.4.0",
     "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "nodemon": "^1.18.4",
+    "sinon": "^7.2.7"
   }
 }
