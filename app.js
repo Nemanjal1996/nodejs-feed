@@ -12,6 +12,7 @@ const MONGO_URI = 'mongodb://admin:nemanja1996@ds153495.mlab.com:53495/nodejs-fe
 
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -42,15 +43,15 @@ app.use(
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-type, Authorixation');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-type, Authorization');
     next();
 });
 
 app.use('/feed', feedRoutes);
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 app.use((error, req, res, next) => {
-    console.log(error);
     const status = error.statusCode || 500;
     const message = error.message;
     const data = error.data;
@@ -58,9 +59,8 @@ app.use((error, req, res, next) => {
     res.status(status).json({
         message: message, 
         data: data
-    })
-
-})
+    });
+});
 
 mongoose
     .connect(MONGO_URI, { useNewUrlParser: true })
