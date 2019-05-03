@@ -13,14 +13,20 @@ exports.signup = async (req, res, next) => {
       error.data = errors.array();
       throw error;
     }
+    if (!req.file) {
+      const error = new Error('No image provided.');
+      error.statusCode = 422;
+      throw error;
+    }
+    const imageUrl = req.file.path;
     const email = req.body.email;
     const name = req.body.name;
     const password = req.body.password;
     const hashedPw = await bcrypt.hash(password, 12);
-
     const user = new User({
       email: email,
       password: hashedPw,
+      imageUrl: imageUrl,
       name: name
     });
     const result = await user.save();
@@ -52,12 +58,12 @@ exports.login = async (req, res, next) => {
       error.statusCode = 401;
       throw error;
     }
-
     const token = jwt.sign(
       {
         email: loadedUser.email,
         userId: loadedUser._id.toString(),
         userName: loadedUser.name,
+        imageUrl: loadedUser.imageUrl
       },
       'somesupersecretsecret',
       { expiresIn: '10h' }
@@ -65,7 +71,8 @@ exports.login = async (req, res, next) => {
     res.status(200).json({
       token: token,
       userId: loadedUser._id.toString(),
-      name: loadedUser.name
+      name: loadedUser.name,
+      imageUrl: loadedUser.imageUrl
     });
   } catch (err) {
     if (!err.statusCode) {

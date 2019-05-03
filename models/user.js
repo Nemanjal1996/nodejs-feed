@@ -19,6 +19,9 @@ const userSchema = new Schema({
         type: String,
         default: 'I am new!'
     },
+    imageUrl: {
+        type: String
+    },
     posts: [{
         type: Schema.Types.ObjectId,
         ref: 'Post'

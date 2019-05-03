@@ -19,19 +19,19 @@ exports.getPosts = async (req, res, next) => {
         path: 'likes',
         populate: { 
           path: 'userId',
-          select: ['name', '_id']
+          select: ['name', '_id', 'imageUrl']
         }
       })
       .populate({
         path: 'comments',
         populate: [{ 
           path: 'userId',
-          select: ['name', '_id'],
+          select: ['name', '_id', 'imageUrl'],
         },{
           path: 'likes',
           populate: { 
             path: 'userId',
-            select: ['name', '_id'],
+            select: ['name', '_id', 'imageUrl'],
           }
         }]
       })
@@ -59,8 +59,8 @@ exports.getPosts = async (req, res, next) => {
 };
 
 exports.createPost = async (req, res, next) => {
+  const errors = validationResult(req);
   try {
-    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const error = new Error('Validation failed, entered data is incorrect.');
       error.statusCode = 422;
@@ -88,11 +88,11 @@ exports.createPost = async (req, res, next) => {
     io.getIO().emit('posts', {
       action: 'create',
       post: { ...post._doc },
-      creator: { _id: user._id, name: user.name }
+      creator: { _id: user._id, name: user.name, imageUrl: user.imageUrl }
     });
     res.status(201).json({
       post: post,
-      creator: { _id: user._id, name: user.name }
+      creator: { _id: user._id, name: user.name, imageUrl: user.imageUrl }
     });
   } catch (err) {
     if (!err.statusCode) {
